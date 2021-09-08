@@ -1,0 +1,13 @@
+CREATE TABLE ogretmenler (
+sira_no number(2) UNIQUE,
+kimlik_no char(11),
+isim varchar2(50),
+brans varchar2(50),
+cinsiyet char(5)
+);
+INSERT INTO ogretmenler VALUES(1,'11223344556', 'Asli Inal', 'Ingilizce','Kadin');
+INSERT INTO ogretmenler VALUES(2,'99887766554', 'Hakan Inal', 'IT','Erkek');
+SELECT*FROM ogretmenler;
+DROP TABLE ogretmenler;
+
+

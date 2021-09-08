@@ -1,0 +1,27 @@
+CREATE TABLE tedarikciler
+(
+Tedarikci_Id char(10),
+Tedarikci_Ismi varchar2(50),
+Iletisim_Isim varchar2(50),
+CONSTRAINT tedarikci_pk PRIMARY KEY (Tedarikci_Id)
+);
+
+INSERT INTO tedarikciler VALUES ('1020', 'HONDA','Yang Lee');
+INSERT INTO tedarikciler VALUES ('1030', 'MERCEDES','Sabrina Maier');
+INSERT INTO tedarikciler VALUES ('1040', 'TOYOTA','Hoewei Micho');
+INSERT INTO tedarikciler VALUES ('1050', 'VW','Merin Marach');
+
+CREATE TABLE urunler2
+(
+Tedarikci_Id CHAR(10),
+Product_Id CHAR(10),
+CONSTRAINT urunler2_fk FOREIGN KEY (Tedarikci_Id) REFERENCES tedarikciler (Tedarikci_Id)
+);
+
+INSERT INTO urunler2 VALUES ('1020', '12156825');
+INSERT INTO urunler2 VALUES ('1030', '2021000450');
+INSERT INTO urunler2 VALUES ('1040', '15253545');
+INSERT INTO urunler2 VALUES ('1050', '2550001465');
+
+
+SELECT * FROM tedarikciler, urunler2;

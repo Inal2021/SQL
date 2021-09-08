@@ -1,0 +1,177 @@
+/*======================= CONSTRAINTS - KISITLAMALAR ======================================
+               
+    NOT NULL - Bir Sütunun  NULL içermemesini garanti eder. 
+
+    UNIQUE - Bir sütundaki tüm deðerlerin BENZERSÝZ olmasýný garanti eder. NULL kabul eder, hatta birden fazla NULL girebiliriz. 
+
+    PRIMARY KEY - Bir sütünün NULL içermemesini ve sütundaki verilerin 
+                  BENZERSÝZ olmasýný garanti eder.(NOT NULL ve UNIQUE birleþimi gibi)
+
+    FOREIGN KEY - Baþka bir tablodaki Primary Key’i referans göstermek için kullanýlýr. 
+                  Böylelikle, tablolar arasýnda iliþki kurulmuþ olur. 
+
+    CHECK - Bir sutundaki tüm verilerin belirlenen özel bir þartý saðlamasýný garanti eder. 
+    soldan tablo silerken tablonun kapalý olmasý lazým
+*/ 
+
+-- ÖRNEK 1 / NOT NULL; ögrenciler tablosu olusturalim ve id field bos birakilamaz yapalim;
+
+CREATE TABLE ogrenciler (
+id_No CHAR(4) not null,
+name_surName VARCHAR(50),
+note_divident number(4,2),
+registry_date date
+);
+
+INSERT INTO ogrenciler VALUES ('1234', 'Hasan', 75.25,'04.09.2021');
+INSERT INTO ogrenciler VALUES ('1234', 'ayse', null,null);
+INSERT INTO ogrenciler (id_No,name_surname) VALUES ('3456', 'fatma');
+-- INSERT INTO ogrenciler VALUES (null, 'osman', 45.25,'05/12/2020'); //ORA-01400: ("HAKAN"."OGRENCILER"."ID_NO") içine NULL eklenemez
+
+SELECT * FROM ogrenciler;
+DROP TABLE ogrenciler;
+
+
+-- ÖRNEK 2 / UNIQUE; Tedarikciler olusturalim id bilgisi unique olsun.
+CREATE TABLE hersteller (
+id CHAR(4) UNIQUE,
+name_ VARCHAR(50),
+adresse VARCHAR(100),
+date_ date
+);
+INSERT INTO hersteller VALUES ('1001', 'P&G','Boulevard Street 11-B200 New York', '11/04/2021');
+INSERT INTO hersteller VALUES ('1002', 'Unilever','Ort-Belmando Village, 24-B425 Kansas City', '14/05/2021');
+INSERT INTO hersteller VALUES ('1003', 'Henkel','Strübe Fielmann Straße 18A Hamburg', '14/06/2021'); --ORA-00001: benzersiz kural (HAKAN.SYS_C0010977) ihlal edildi
+
+SELECT
+    *
+FROM hersteller;
+
+-- ÖRNEK 3 / PRIMARY KEY;
+
+CREATE TABLE staff (
+id CHAR(5) PRIMARY KEY,
+name_ VARCHAR(50) UNIQUE,
+price NUMBER(5) NOT NULL,
+start_of_Job date
+);
+
+INSERT INTO staff VALUES ('10100', 'Hakan Inal',6500,'12.01.2022');
+INSERT INTO staff VALUES ('10101', 'Asli Inal',6000,'12.7.2022');
+INSERT INTO staff VALUES ('10102', 'Ali Ihsan Inal',12000,'25.06.2027');
+INSERT INTO staff VALUES ('10103', 'Said Orhan Inal',12000,'16.11.2030'); --isim ayni girilirse hata kabul etmez
+INSERT INTO staff VALUES (NULL, 'Süheyla Belkis Inal',10000,'22.04.2031'); -- Hata verir NULL lkabul etmez
+
+SELECT * FROM staff;
+
+-- ogrenciler3 tablosu olusturalim ve ogrenci_id 'yi PRIMARY KEY yapalim
+
+    CREATE TABLE ogrenciler3
+( 
+ogrenci_id char(4) PRIMARY KEY, 
+Isim_soyisim varchar2(50), 
+not_ort number(5,2), --100,00
+kayit_tarihi date -- 14-01-2021
+);
+
+SELECT *
+FROM ogrenciler3;
+
+INSERT INTO ogrenciler3 VALUES ('1234', 'hasan yaman',75.70,'14-01-2020');
+INSERT INTO ogrenciler3 VALUES (null, 'veli yaman',85.70,'14-01-2020'); -- id null olamaz //ORA-01400: ("HAKAN"."OGRENCILER3"."OGRENCI_ID") içine NULL eklenemez
+INSERT INTO ogrenciler3 VALUES ('1234', 'Ali Can',55.70,'14-06-2020'); -- id benzersiz olmalý, daha önceverilen id kullanýlamaz
+INSERT INTO ogrenciler3 (isim_soyisim) VALUES ( 'Veli Cem'); -- id vermeden baþka þeyler vermeye geçemezsin, default null atar, buda primary ye uymaz
+INSERT INTO ogrenciler3 (ogrenci_id) VALUES ( '5687');
+
+-- PRIMARY KEY alternatif yöntem
+-- bu yöntemdemde kisitlamaya istedigimiz ismi atayabiliriz.
+create table calismayanlar (
+id char(5), --primary key
+isim varchar(50) UNIQUE,
+maas number(5) not null,
+CONSTRAINT id_primary PRIMARY KEY (id)
+);
+
+SELECT
+    *
+FROM calismayanlar;
+
+INSERT INTO calismayanlar VALUES('10001', 'Ahmet Aslan',7000);
+INSERT INTO calismayanlar VALUES( '10002', 'Mehmet Yýlmaz' ,12000);
+INSERT INTO calismayanlar VALUES('10003', 'CAN', 5000);
+
+--bir tabloya data eklerken constrait lere dikkat edilmelidir.
+
+--ÖRNEK 4// FOREIGN KEY
+
+create table adresler (
+    adres_id char(5),
+    sokak VARCHAR(30),
+    cadde VARCHAR(30),
+    sehir VARCHAR(15),
+    CONSTRAINT id_foreign FOREIGN KEY(adres_id) REFERENCES staff(id)
+    );
+
+    INSERT INTO adresler VALUES('10100','Mutlu Sok', '40.Cad.','IST');
+    INSERT INTO adresler VALUES('10101','Can Sok', '50.Cad.','Ankara');
+    INSERT INTO adresler VALUES('10102','Aða Sok', '30.Cad.','Antep');
+    INSERT INTO adresler VALUES('','Aða Sok', '30.Cad.','Antep');
+    INSERT INTO adresler VALUES('','Aða Sok', '30.Cad.','Antep');
+    INSERT INTO adresler VALUES('10104','Gel Sok', '60.Cad.','Van');
+    
+    SELECT *
+FROM adresler;
+
+DROP TABLE adresler;
+
+
+-- Ögrenciler5 tablosunu olusturun ve id, isim hanelerinin birlesimini primary key yapin;
+
+create table ogrenciler5(
+id char(4),
+isim varchar(20),
+not_ort number(5,2),
+kayit_tarihi date,
+CONSTRAINT ogrenciler5_primary PRIMARY KEY (id,isim)
+);
+
+INSERT INTO ogrenciler5 VALUES (null,'Veli Cem',90.6,'Ankara','15-05-2019'); -- primary key NULL olamaz => ORA-01400: cannot insert NULL into ("HR"."OGRENCILER5"."ID")
+INSERT INTO ogrenciler5 VALUES (1234,null,90.6,'Ankara','15-05-2019'); -- primary key NULL olamaz => ORA-01400: cannot insert NULL into ("HR"."OGRENCILER5"."ISIM")
+INSERT INTO ogrenciler5 VALUES (1234,'Ali Can',90.6,'Ankara','15-05-2019'); -- PK= 1234Ali Can
+INSERT INTO ogrenciler5 VALUES (1234,'Veli Cem',90.6,'Ankara','15-05-2019'); -- PK=1234Veli Cem
+INSERT INTO ogrenciler5 VALUES (1234,'Oli Can',90.6,'Ankara','15-05-2019');  
+
+select * from ogrencýler5;
+
+--“tedarikciler4” isimli bir Tablo olusturun. Icinde “tedarikci_id”, “tedarikci_isim”, “iletisim_isim” field’lari olsun.
+--“tedarikci_id” ve “tedarikci_isim” fieldlarini birlestirerek Primary Key olusturun.
+--“urunler2” isminde baska bir tablo olusturun.Icinde “tedarikci_id” ve “urun_id” fieldlari olsun.
+--“tedarikci_id” ve “urun_id” fieldlarini birlestirerek Foreign Key olusturun
+
+create table tedarikciler4 (
+tedarikci_id char(4),
+tedarikci_ismi varchar(20),
+iletisim_ismi varchar(20),
+CONSTRAINT tedarikciler4_pk PRIMARY KEY (tedarikci_id, tedarikci_ismi) --char + varchar 
+);
+
+create table urunler3 (
+tedarikci_id char(4),
+urun_id varchar(5),
+yas number,
+CONSTRAINT urunler3_pk FOREIGN KEY (tedarikci_id, urun_id) REFERENCES tedarikciler4
+);                                                          --char + varchar
+
+
+
+CREATE TABLE sehirler2 (	
+    alan_kodu CHAR(3 ),
+	isim VARCHAR2(50),
+	nufus NUMBER(8,0) CHECK (nufus>1000)
+    );
+    INSERT INTO sehirler2 VALUES ('312','Ankara',5750000);
+    INSERT INTO sehirler2 VALUES ('232','izmir',375); -- ORA-02290: check constraint (HR.SYS_C007028) violated
+    INSERT INTO sehirler2 VALUES ('232','izmir',3750000);
+    INSERT INTO sehirler2 VALUES ('436','Maras',null);
+
+select * from sehirler2;
