@@ -96,3 +96,29 @@ select sirket_adi, personel_sayisi, (select MAX (maas) from personel5
 Select sirket_id, sirket_adi, (select count(sehir)from personel5
                                 where sirket=sirket_adi) AS sehir_sayisi
 from sirketler5;
+
+--ÖDEVLER-------
+-- 1) sirket id, sirket ismi, sirketteki min maas, sirketteki max maas, sirketteki ort.maas lari yazdirin
+
+Select sirket_id, sirket_adi, (select MIN (maas) from personel5
+                                            where sirket_adi=sirket) as min_maas,
+                        (select MAX (maas) from personel5
+                                            where sirket_adi=sirket) as max_maas
+                        from sirketler5;
+
+-- 2) izmir,istanbul veya bursada personeli bulunan sirketlerin calisan sayilarini listeleyin
+
+select personel_sayisi, (SELECT izmir, istanbul, bursa from sirketler5 
+
+
+
+-- 3) izmirde calisan Veli YIlmaz'in maasini 2000 yapin
+-- 4) personel sayisi 10000 olan sirketten personel  tablosunda bulunan kisinin maasini 6000 yapin
+
+
+
+
+
+
+
+
