@@ -109,7 +109,7 @@ Select sirket_id, sirket_adi, (select MIN (maas) from personel5
 -- 2) izmir,istanbul veya bursada personeli bulunan sirketlerin calisan sayilarini listeleyin
 
 select personel_sayisi, (SELECT izmir, istanbul, bursa from sirketler5 
-
+                            where 
 
 
 -- 3) izmirde calisan Veli YIlmaz'in maasini 2000 yapin

@@ -135,4 +135,72 @@ CREATE TABLE kisiler
   ORNEK1: kisiler tablosunu adres'e göre sýralayarak sorgulayýnýz.
  -----------------------------------------------------------------------------*/
  
+ SELECT * FROM kisiler
+ ORDER BY adres;
  
+ --ÖRNEK 2: Kisiler tablosunu maasa göre azalana göre siralayiniz;
+ 
+ SELECT * FROM kisiler
+ ORDER BY maas DESC;
+ 
+ --ORNEK3: ismi Mine olanlarý, SSN'e göre AZALAN(DESC) sýrada sorgulayýnýz.
+    
+ SELECT * FROM kisiler
+ WHERE isim='Mine'
+ ORDER BY ssn DESC; 
+ 
+-- ORNEK 4: soyismi 'i Bulut olanlarý isim sýralý olarak sorgulayýnýz.
+    SELECT * FROM kisiler
+    WHERE soyisim='Bulut'
+    ORDER BY 2; --isim yerine ismin sütun sirasi olan 2 yi kullanabiliriz.
+    
+/*    
+====================== FETCH NEXT, OFFSET (12C VE ÜSTÜ oracle larda çalýþýr, daha altsanýz çalýþmaz) ======================
+   FETCH cümleciði ile listelenecek kayýtlarý sýnýrlandýrabiliriz. Ýstersek
+   satýr sayýsýna göre istersek de toplam satýr sayýsýnýn belli bir yüzdesine
+   göre sýnýrlandýrma koymak mümkündür. (þu kadar satýrý getir)
+   Syntax
+   ---------
+   FETCH NEXT satir_sayisi ROWS ONLY;
+   FETCH NEXT satir_yuzdesi PERCENT ROWS ONLY;
+   OFFSET Cümleciði ile de listenecek olan satýrlardan sýrasýyla istediðimiz
+   kadarýný atlayabiliriz.
+   Syntax
+   ----------
+   OFFSET satýr_sayisi ROWS;            *****OFFSET atla, FETCH getir manasina gelir.*****
+==============================================================================*/
+----------------------------------------------------------------------------
+--  ORNEK1: MAAÞ'ý en yüksek 3 kiþinin bilgilerini listeleyen sorguyu yazýnýz.
+
+SELECT * FROM kisiler
+ORDER BY maas DESC
+FETCH NEXT 3 ROWS ONLY;
+
+--2. YOL (Eski Usul)
+
+SELECT*FROM (SELECT*FROM kisiler
+ORDER BY maas DESC) -- kisilerde maasa göre ters sirala
+WHERE ROWNUM<4; --1, 2 ve 3. satiri getir (Eski sürümlerde calisir)
+
+--ORNEK2: MAAÞ'ý en DÜÞÜK 2 kiþinin bilgilerini listeleyen sorguyu yazýnýz.
+Select * from kisiler
+order by maas
+fetch next 2 rows only;
+
+--ORNEK3: MAAÞ'a göre (azalan) sýralamada 4. 5. ve 6. kiþilerin bilgilerini listeleyen sorguyu yazýnýz.
+SELECT * FROM kisiler
+order by maas desc 
+OFFSET 3 rows 
+FETCH NEXT 3 rows only;
+
+--2. YOL (Eski usul)
+  SELECT * FROM
+   (SELECT * FROM
+   (SELECT *
+                FROM   kisiler
+                ORDER BY maas DESC)
+        WHERE ROWNUM <=6)
+WHERE  ROWNUM <=3;
+
+--3. YOL
+SELECT * FROM (SELECT * FROM   kisiler WHERE ROWNUM <=6 ORDER BY maas DESC) WHERE  ROWNUM <=3;
