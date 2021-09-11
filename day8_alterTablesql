@@ -1,0 +1,80 @@
+/*
+=============================== ALTER TABLE ==================================
+    --iç kaporta için UPDATE (DML), dýþ kaporta için ALTER (DDL)
+    ALTER TABLE  tabloda ADD, MODIFY, veya DROP/DELETE COLUMNS islemleri icin
+    kullanilir.
+    ALTER TABLE ifadesi tablolari yeniden isimlendirmek (RENAME) icin de
+    kullanilir.
+==========================================================
+*/
+
+CREATE TABLE personel
+    (
+        id NUMBER(9),
+        isim VARCHAR2(50),
+        sehir VARCHAR2(50),
+        maas NUMBER(20),
+        sirket VARCHAR2(20)
+    );
+    INSERT INTO personel VALUES(123456789, 'Ali Yilmaz', 'Istanbul', 5500, 'Honda');
+    INSERT INTO personel VALUES(234567890, 'Veli Sahin', 'Istanbul', 4500, 'Toyota');
+    INSERT INTO personel VALUES(345678901, 'Mehmet Ozturk', 'Ankara', 3500, 'Honda');
+    INSERT INTO personel VALUES(456789012, 'Mehmet Ozturk', 'Izmir', 6000, 'Ford');
+    INSERT INTO personel VALUES(567890123, 'Mehmet Ozturk', 'Ankara', 7000, 'Tofas');
+    INSERT INTO personel VALUES(456715012, 'Veli Sahin', 'Ankara', 4500, 'Ford');
+/* -----------------------------------------------------------------------------
+  ORNEK1: personel tablosuna ulke_isim adinda ve default degeri 'Turkiye' olan
+  yeni bir sutun ekleyiniz.
+------------------------------------------------------------------------------*/
+Alter table personel ADD ulke_isim varchar2(20) DEFAULT 'TURKIYE';
+
+select * from personel;
+
+--ORNEK2: personel tablosuna cinsiyet Varchar2(20) ve yas Number(3) seklinde yeni sutunlar ekleyiniz.
+
+Alter table personel ADD (cinsiyet Varchar2(20), yas Number(3)); 
+
+select * from personel;
+
+--ORNEK3: personel tablosundan yas sutununu siliniz.
+Alter table personel DROP column yas;
+
+select * from personel;
+
+--ORNEK4: personel tablosundaki ulke_isim sutununun adini ulke_adi olarak degistiriniz.
+alter table personel RENAME COLUMN ulke_isim to ulke_adi;
+
+select * from personel;
+
+--ORNEK5: personel tablosunun adini isciler olarak degistiriniz.
+----------------------------------------------------------------
+alter table personel RENAME to insan_kaynaklari;
+
+select * from insan_kaynaklari; -- Tablonun adini degistirdigimiz icim artik insan_kaynaklari ismi ile görüntüleme yapabiliriz.
+
+--ORNEK6: isciler tablosundaki ulke_adi sutununa NOT NULL kisitlamasi ekleyiniz.
+-----------------------------------------------------------------
+alter table insan_kaynaklari MODIFY ulke_adi varchar2(30) not Null;
+
+select * from insan_kaynaklari;
+
+--MAAS 1 UNIQE yap
+
+--check kýsýtlamasý ekleyelim
+ALTER TABLE insan_kaynaklari
+MODIFY maas CHECK (maas>3000); --bundan sonra da 3000den düþük maas veremem
+INSERT INTO insan_kaynaklari VALUES(456715013, 'Ali Sahin', 'Ankara', 2500, 'Ford');
+
+--ORNEK3: Tüm bolumlerde calisan personelin isimlerini, bolum isimlerini ve
+--maaslarini bolum_id ve maas ters sirali listeleyiniz.
+--NOT: calisani olmasa bile bolum ismi gosterilmelidir.
+
+select bolum_isim, personel_isim, maas
+from bolumler b
+LEFT JOIN personel ik
+ON ik.bolum=b.bolum_ýd
+ORDER BY b.bolum_ýd, ik.maas desc;
+
+ORNEK4: SATIS ve MUDURLUK bolumlerinde calisan personelin maaslari 2000'den
+  buyuk olanlarinin isim,bolum ve maas bilgilerini bolum_id ye ve isme gore
+  siralayarak listeleyiniz.
