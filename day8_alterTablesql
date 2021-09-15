@@ -78,3 +78,8 @@ ORDER BY b.bolum_ýd, ik.maas desc;
 ORNEK4: SATIS ve MUDURLUK bolumlerinde calisan personelin maaslari 2000'den
   buyuk olanlarinin isim,bolum ve maas bilgilerini bolum_id ye ve isme gore
   siralayarak listeleyiniz.
+  
+
+  
+  
+  commit;

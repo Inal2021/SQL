@@ -196,3 +196,5 @@ ORNEK2: SATIS,ISLETME ve DEPO bolumlerinde calisan personelin isimlerini,
   ON p.bolum_id=b.bolum_id
   where bolum_isim IN('SATIS','ISLETME','DEPO')
   Order by bolum_isim;
+  
+  SELECT * FROM urunler;
