@@ -1,1 +1,1 @@
-select * from hesaplar;
+select * from personeller;
