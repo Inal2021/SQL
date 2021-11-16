@@ -1,1 +1,1 @@
-select * from personeller;
+select * from kisiler;
